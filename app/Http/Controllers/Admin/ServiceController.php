@@ -8,9 +8,15 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $services = Service::latest()->paginate(12);
+        $services = Service::with('bookings')
+            ->when($request->filled('q'), fn ($q) => $q->where('name', 'like', '%' . $request->q . '%'))
+            ->when($request->filled('type'), fn ($q) => $q->where('service_type', $request->type))
+            ->when($request->filled('status'), fn ($q) => $q->where('is_active', $request->status))
+            ->latest()
+            ->paginate(12)
+            ->withQueryString();
 
         return view('admin.services.index', compact('services'));
     }
@@ -38,7 +44,13 @@ class ServiceController extends Controller
 
     public function show(Service $service)
     {
-        return view('admin.services.show', compact('service'));
+        $service->load(['bookings.user', 'bookings.pet']);
+
+        $totalBookings = $service->bookings->count();
+        $totalRevenue = $service->bookings->where('status', 'completed')->sum('price');
+        $thisMonthBookings = $service->bookings->whereMonth('created_at', now()->month)->count();
+
+        return view('admin.services.show', compact('service', 'totalBookings', 'totalRevenue', 'thisMonthBookings'));
     }
 
     public function edit(Service $service)

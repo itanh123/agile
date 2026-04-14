@@ -14,11 +14,14 @@ class UserController extends Controller
     {
         $users = User::with('role')
             ->when($request->filled('q'), fn ($q) => $q->where('email', 'like', '%' . $request->q . '%')->orWhere('full_name', 'like', '%' . $request->q . '%'))
+            ->when($request->filled('role'), fn ($q) => $q->where('role_id', $request->role))
             ->latest()
             ->paginate(12)
             ->appends($request->query());
 
-        return view('admin.users.index', compact('users'));
+        $roles = \App\Models\Role::all();
+
+        return view('admin.users.index', compact('users', 'roles'));
     }
 
     public function create()
@@ -47,7 +50,13 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        return view('admin.users.show', compact('user'));
+        $user->load(['bookings.pet', 'bookings.services']);
+
+        $bookingsCount = $user->bookings->count();
+        $pendingBookings = $user->bookings->where('status', 'pending')->count();
+        $completedBookings = $user->bookings->where('status', 'completed')->count();
+
+        return view('admin.users.show', compact('user', 'bookingsCount', 'pendingBookings', 'completedBookings'));
     }
 
     public function edit(User $user)

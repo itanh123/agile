@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PromotionController extends Controller
 {
@@ -12,7 +13,10 @@ class PromotionController extends Controller
     {
         $promotions = Promotion::latest()->paginate(12);
 
-        return view('admin.promotions.index', compact('promotions'));
+        $expiredPromotions = Promotion::where('end_at', '<', now())->count();
+        $totalDiscount = Promotion::where('is_active', 1)->sum('discount_value');
+
+        return view('admin.promotions.index', compact('promotions', 'expiredPromotions', 'totalDiscount'));
     }
 
     public function create()
@@ -40,7 +44,13 @@ class PromotionController extends Controller
 
     public function show(Promotion $promotion)
     {
-        return view('admin.promotions.show', compact('promotion'));
+        $promotion->load(['usages.user', 'bookings']);
+
+        $usageCount = $promotion->usages->count();
+        $uniqueUsers = $promotion->usages->pluck('user_id')->unique()->count();
+        $totalSaved = $promotion->usages->sum('discount_amount');
+
+        return view('admin.promotions.show', compact('promotion', 'usageCount', 'uniqueUsers', 'totalSaved'));
     }
 
     public function edit(Promotion $promotion)

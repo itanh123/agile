@@ -15,17 +15,21 @@ class BookingController extends Controller
         $bookings = Booking::with(['user', 'pet', 'staff'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->status))
             ->when($request->filled('customer'), fn ($q) => $q->whereHas('user', fn ($x) => $x->where('full_name', 'like', '%' . $request->customer . '%')))
+            ->when($request->filled('code'), fn ($q) => $q->where('booking_code', 'like', '%' . $request->code . '%'))
             ->latest()
             ->paginate(15)
             ->withQueryString();
 
-        return view('admin.bookings.index', compact('bookings'));
+        $statusCounts = Booking::select('status', DB::raw('COUNT(*) as total'))->groupBy('status')->get();
+        $totalRevenue = Booking::where('status', 'completed')->sum('total_amount');
+
+        return view('admin.bookings.index', compact('bookings', 'statusCounts', 'totalRevenue'));
     }
 
     public function show(Booking $booking)
     {
         $staffUsers = User::whereHas('role', fn ($q) => $q->where('slug', 'staff'))->get();
-        $booking->load(['user', 'pet', 'services', 'logs', 'images', 'payment']);
+        $booking->load(['user', 'pet', 'services']);
 
         return view('admin.bookings.show', compact('booking', 'staffUsers'));
     }
