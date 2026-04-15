@@ -1,9 +1,12 @@
 @extends('layouts.admin')
 @section('title', 'Service Details')
-@section('breadcrumbs', [
-    ['label' => 'Services', 'url' => route('admin.services.index')],
-    ['label' => $service->name]
-])
+
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<a href="{{ route('admin.services.index') }}">Services</a>
+<i class="bi bi-chevron-right"></i>
+<span>{{ $service->name }}</span>
+@endpush
 
 @section('content')
 <div class="row g-4">

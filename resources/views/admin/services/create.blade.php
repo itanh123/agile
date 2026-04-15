@@ -1,16 +1,18 @@
 @extends('layouts.admin')
 @section('title', 'Create Service')
 
-@section('breadcrumbs', [
-    ['label' => 'Services', 'url' => route('admin.services.index')],
-    ['label' => 'Create']
-])
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<a href="{{ route('admin.services.index') }}">Services</a>
+<i class="bi bi-chevron-right"></i>
+<span>Create</span>
+@endpush
 
 @section('content')
 <div class="row">
     <div class="col-lg-8">
         <div class="admin-form">
-            <form method="POST" action="{{ $action }}">
+            <form method="POST" action="{{ route('admin.services.store') }}">
                 @csrf
                 
                 <h4 class="mb-4">Service Information</h4>

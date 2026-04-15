@@ -1,9 +1,10 @@
 @extends('layouts.admin')
 @section('title', 'Users Management')
 
-@section('breadcrumbs', [
-    ['label' => 'Users']
-])
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<span>Users</span>
+@endpush
 
 @section('content')
 <div class="page-header">
@@ -17,10 +18,10 @@
 <div class="admin-card mb-4">
     <form method="GET" action="{{ route('admin.users.index') }}" class="filter-bar">
         <div class="form-group">
-            <div class="search-box">
-                <i class="bi bi-search"></i>
-                <input type="text" name="q" class="form-control-admin search-box" placeholder="Search by name or email..." value="{{ request('q') }}">
-            </div>
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" name="q" class="form-control-admin" placeholder="Search by name or email..." value="{{ request('q') }}">
+                </div>
         </div>
         <div class="form-group">
             <select name="role" class="form-select-admin">
@@ -105,17 +106,21 @@
                                     <a href="{{ route('admin.users.show', $user) }}" class="btn-admin btn-admin-secondary btn-admin-sm btn-admin-icon" title="View">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="{{ route('admin.users.edit', $user) }}" class="btn-admin btn-admin-secondary btn-admin-sm btn-admin-icon" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    @if($user->id !== auth()->id())
-                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn-admin btn-admin-danger btn-admin-sm btn-admin-icon" title="Delete">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                    
+                                    @if($user->role?->slug !== 'admin')
+                                        <a href="{{ route('admin.users.edit', $user) }}" class="btn-admin btn-admin-secondary btn-admin-sm btn-admin-icon" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        
+                                        @if($user->id !== auth()->id())
+                                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn-admin btn-admin-danger btn-admin-sm btn-admin-icon" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
                                     @endif
                                 </div>
                             </td>

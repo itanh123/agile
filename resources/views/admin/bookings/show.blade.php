@@ -1,9 +1,12 @@
 @extends('layouts.admin')
 @section('title', 'Booking Details')
-@section('breadcrumbs', [
-    ['label' => 'Bookings', 'url' => route('admin.bookings.index')],
-    ['label' => $booking->booking_code]
-])
+
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<a href="{{ route('admin.bookings.index') }}">Bookings</a>
+<i class="bi bi-chevron-right"></i>
+<span>{{ $booking->booking_code }}</span>
+@endpush
 
 @section('content')
 <div class="row g-4">

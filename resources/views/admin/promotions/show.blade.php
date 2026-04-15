@@ -1,9 +1,12 @@
 @extends('layouts.admin')
 @section('title', 'Promotion Details')
-@section('breadcrumbs', [
-    ['label' => 'Promotions', 'url' => route('admin.promotions.index')],
-    ['label' => $promotion->code]
-])
+
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<a href="{{ route('admin.promotions.index') }}">Promotions</a>
+<i class="bi bi-chevron-right"></i>
+<span>{{ $promotion->code }}</span>
+@endpush
 
 @section('content')
 <div class="row g-4">
@@ -62,21 +65,21 @@
             <div class="col-md-4">
                 <div class="admin-card text-center">
                     <i class="bi bi-ticket" style="font-size: 1.5rem; color: var(--admin-primary);"></i>
-                    <h3 class="mt-2 mb-1">{{ $promotion->usage_count ?? 0 }}</h3>
+                    <h3 class="mt-2 mb-1">{{ $usageCount ?? 0 }}</h3>
                     <p class="text-muted mb-0" style="font-size: 0.8rem;">Times Used</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="admin-card text-center">
                     <i class="bi bi-people" style="font-size: 1.5rem; color: var(--admin-info);"></i>
-                    <h3 class="mt-2 mb-1">{{ $promotion->unique_users ?? 0 }}</h3>
+                    <h3 class="mt-2 mb-1">{{ $uniqueUsers ?? 0 }}</h3>
                     <p class="text-muted mb-0" style="font-size: 0.8rem;">Unique Users</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="admin-card text-center">
                     <i class="bi bi-currency-dollar" style="font-size: 1.5rem; color: var(--admin-success);"></i>
-                    <h3 class="mt-2 mb-1">{{ number_format($promotion->total_saved ?? 0, 0) }}đ</h3>
+                    <h3 class="mt-2 mb-1">{{ number_format($totalSaved ?? 0, 0) }}đ</h3>
                     <p class="text-muted mb-0" style="font-size: 0.8rem;">Total Saved</p>
                 </div>
             </div>

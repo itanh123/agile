@@ -61,6 +61,10 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        if ($user->role?->slug === 'admin') {
+            return redirect()->route('admin.users.index')->with('error', 'Cannot edit Admin accounts.');
+        }
+
         $roles = Role::all();
 
         return view('admin.users.edit', compact('user', 'roles'));
@@ -68,6 +72,10 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        if ($user->role?->slug === 'admin') {
+            return redirect()->route('admin.users.index')->with('error', 'Cannot update Admin accounts.');
+        }
+
         $data = $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -89,6 +97,10 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        if ($user->role?->slug === 'admin') {
+            return redirect()->route('admin.users.index')->with('error', 'Cannot delete Admin accounts.');
+        }
+
         $user->delete();
 
         return back()->with('success', 'User deleted.');

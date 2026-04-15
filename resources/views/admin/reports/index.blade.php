@@ -1,9 +1,10 @@
 @extends('layouts.admin')
 @section('title', 'Reports & Analytics')
 
-@section('breadcrumbs', [
-    ['label' => 'Reports']
-])
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<span>Reports</span>
+@endpush
 
 @section('content')
 <!-- Summary Cards -->

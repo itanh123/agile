@@ -1,9 +1,12 @@
 @extends('layouts.admin')
 @section('title', 'User Details')
-@section('breadcrumbs', [
-    ['label' => 'Users', 'url' => route('admin.users.index')],
-    ['label' => $user->full_name ?? $user->name]
-])
+
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<a href="{{ route('admin.users.index') }}">Users</a>
+<i class="bi bi-chevron-right"></i>
+<span>{{ $user->full_name ?? $user->name }}</span>
+@endpush
 
 @section('content')
 <div class="row g-4">

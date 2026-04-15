@@ -1,16 +1,18 @@
 @extends('layouts.admin')
 @section('title', 'Edit Promotion')
 
-@section('breadcrumbs', [
-    ['label' => 'Promotions', 'url' => route('admin.promotions.index')],
-    ['label' => 'Edit']
-])
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<a href="{{ route('admin.promotions.index') }}">Promotions</a>
+<i class="bi bi-chevron-right"></i>
+<span>Edit</span>
+@endpush
 
 @section('content')
 <div class="row">
     <div class="col-lg-8">
         <div class="admin-form">
-            <form method="POST" action="{{ $action }}">
+            <form method="POST" action="{{ route('admin.promotions.update', $promotion) }}">
                 @csrf
                 @method('PUT')
                 

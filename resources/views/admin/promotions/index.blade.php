@@ -1,9 +1,10 @@
 @extends('layouts.admin')
 @section('title', 'Promotions Management')
 
-@section('breadcrumbs', [
-    ['label' => 'Promotions']
-])
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<span>Promotions</span>
+@endpush
 
 @section('content')
 <div class="page-header">

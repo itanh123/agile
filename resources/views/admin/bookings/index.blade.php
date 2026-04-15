@@ -1,9 +1,10 @@
 @extends('layouts.admin')
 @section('title', 'Bookings Management')
 
-@section('breadcrumbs', [
-    ['label' => 'Bookings']
-])
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<span>Bookings</span>
+@endpush
 
 @section('content')
 <div class="page-header">

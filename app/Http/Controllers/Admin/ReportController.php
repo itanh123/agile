@@ -33,11 +33,21 @@ class ReportController extends Controller
             ->get();
 
         $topCustomers = User::withCount('bookings')
-            ->withSum('bookings as total_spent', fn($q) => $q->where('status', 'completed')->select(DB::raw('SUM(total_amount)')))
+            ->with([
+                'bookings' => function ($q) {
+                    $q->where('status', 'completed')
+                      ->select('user_id', DB::raw('SUM(total_amount) as total_spent'))
+                      ->groupBy('user_id');
+                }
+            ])
             ->whereHas('bookings')
-            ->orderByDesc('bookings_count')
-            ->take(5)
-            ->get();
+            ->get()
+            ->map(function ($user) {
+                $user->total_spent = $user->bookings->first()?->total_spent ?? 0;
+                return $user;
+            })
+            ->sortByDesc(fn($u) => $u->total_spent)
+            ->take(5);
 
         return view('admin.reports.index', compact(
             'totalBookings', 

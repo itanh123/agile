@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\BookingStatusLog;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {

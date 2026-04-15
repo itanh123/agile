@@ -105,12 +105,7 @@
                         <h1 class="page-title">{{ $title ?? 'Dashboard' }}</h1>
                         <nav class="breadcrumb-nav">
                             <a href="{{ route('admin.dashboard') }}">Admin</a>
-                            @if(isset($breadcrumbs) && count($breadcrumbs))
-                                @foreach($breadcrumbs as $breadcrumb)
-                                    <i class="bi bi-chevron-right"></i>
-                                    <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['label'] }}</a>
-                                @endforeach
-                            @endif
+                            @stack('breadcrumbs')
                         </nav>
                     </div>
                 </div>

@@ -1,18 +1,19 @@
 @extends('layouts.admin')
-@section('title', isset($user) ? 'Edit User' : 'Create User')
+@section('title', 'Create User')
 
-@section('breadcrumbs', [
-    ['label' => 'Users', 'url' => route('admin.users.index')],
-    ['label' => isset($user) ? 'Edit' : 'Create']
-])
+@push('breadcrumbs')
+<i class="bi bi-chevron-right"></i>
+<a href="{{ route('admin.users.index') }}">Users</a>
+<i class="bi bi-chevron-right"></i>
+<span>Create</span>
+@endpush
 
 @section('content')
 <div class="row">
     <div class="col-lg-8">
         <div class="admin-form">
-            <form method="POST" action="{{ $action }}">
+            <form method="POST" action="{{ route('admin.users.store') }}">
                 @csrf
-                @if($method !== 'POST') @method($method) @endif
                 
                 <div class="row g-3">
                     <div class="col-md-6">
