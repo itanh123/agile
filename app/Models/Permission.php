@@ -9,5 +9,15 @@ class Permission extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'description', 'is_active'];
+    protected $fillable = ['name', 'slug', 'description', 'module', 'is_active'];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_permissions');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_permissions');
+    }
 }

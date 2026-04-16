@@ -1,11 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\AccessMatrixController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PromotionController as AdminPromotionController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\UserPermissionController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Customer\AssistantController;
 use App\Http\Controllers\Customer\BookingController as CustomerBookingController;
@@ -59,11 +64,12 @@ Route::prefix('customer')->name('customer.')->middleware(['auth', 'role:customer
 
 Route::prefix('staff')->name('staff.')->middleware(['auth', 'role:staff'])->group(function () {
     Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/bookings', [StaffBookingController::class, 'index'])->name('bookings.index');
-    Route::get('/bookings/{booking}', [StaffBookingController::class, 'show'])->name('bookings.show');
-    Route::patch('/bookings/{booking}/status', [StaffBookingController::class, 'updateStatus'])->name('bookings.update-status');
-    Route::post('/bookings/{booking}/images', [StaffBookingController::class, 'uploadImage'])->name('bookings.upload-image');
-    Route::post('/bookings/{booking}/notes', [StaffBookingController::class, 'addNote'])->name('bookings.add-note');
+    Route::get('/bookings', [StaffBookingController::class, 'index'])->name('bookings.index')->middleware('permission:booking.view_assigned');
+    Route::get('/bookings/{booking}', [StaffBookingController::class, 'show'])->name('bookings.show')->middleware('permission:booking.view_assigned');
+    Route::patch('/bookings/{booking}/status', [StaffBookingController::class, 'updateStatus'])->name('bookings.update-status')->middleware('permission:booking.update_status');
+    Route::post('/bookings/{booking}/images', [StaffBookingController::class, 'uploadImage'])->name('bookings.upload-image')->middleware('permission:booking.upload_image');
+    Route::post('/bookings/{booking}/notes', [StaffBookingController::class, 'addNote'])->name('bookings.add-note')->middleware('permission:booking.add_note');
+    Route::get('/team', [StaffDashboardController::class, 'team'])->name('team')->middleware('permission:staff.view_team');
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
@@ -76,4 +82,21 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::patch('/bookings/{booking}/assign-staff', [AdminBookingController::class, 'assignStaff'])->name('bookings.assign-staff');
     Route::patch('/bookings/{booking}/status', [AdminBookingController::class, 'updateStatus'])->name('bookings.update-status');
     Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+
+    // Permission Management
+    Route::resource('roles', RoleController::class);
+    Route::get('/roles/{role}/permissions', [RoleController::class, 'permissions'])->name('roles.permissions');
+    Route::patch('/roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.permissions.update');
+
+    Route::resource('permissions', PermissionController::class);
+
+    Route::get('/user-permissions', [UserPermissionController::class, 'index'])->name('users.permissions.index');
+    Route::get('/user-permissions/{user}/edit', [UserPermissionController::class, 'edit'])->name('users.permissions.edit');
+    Route::patch('/user-permissions/{user}', [UserPermissionController::class, 'update'])->name('users.permissions.update');
+    Route::patch('/user-permissions/{user}/manager', [UserPermissionController::class, 'updateManager'])->name('users.permissions.update-manager');
+
+    Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
+    Route::get('/teams/{user}', [TeamController::class, 'show'])->name('teams.show');
+
+    Route::get('/access-matrix', [AccessMatrixController::class, 'index'])->name('access-matrix.index');
 });

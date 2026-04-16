@@ -38,4 +38,21 @@ class Pet extends Model
     {
         return $this->belongsTo(PetBreed::class, 'breed_id');
     }
+
+    public function age()
+    {
+        if (!$this->date_of_birth) {
+            return null;
+        }
+        
+        $birthDate = \Carbon\Carbon::parse($this->date_of_birth);
+        $years = $birthDate->diffInYears(now());
+        $months = $birthDate->diffInMonths(now()) % 12;
+        
+        if ($years > 0) {
+            return $years . ' tuổi ' . ($months > 0 ? $months . ' tháng' : '');
+        }
+        
+        return $months . ' tháng tuổi';
+    }
 }

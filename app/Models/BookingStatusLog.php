@@ -11,4 +11,14 @@ class BookingStatusLog extends Model
 
     protected $fillable = ['booking_id', 'status', 'changed_by', 'note', 'changed_at'];
     protected $casts = ['changed_at' => 'datetime'];
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
+    public function changedByUser()
+    {
+        return $this->belongsTo(User::class, 'changed_by');
+    }
 }

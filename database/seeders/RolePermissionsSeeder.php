@@ -17,10 +17,22 @@ class RolePermissionsSeeder extends Seeder
             return;
         }
 
+        $bookingPermissions = [
+            'booking.view_assigned',
+            'booking.update_status',
+            'booking.upload_image',
+            'booking.add_note',
+        ];
+
+        $adminPermissions = array_merge($bookingPermissions, [
+            'staff.view_team',
+            'staff.manage_team',
+            'booking.assign_staff',
+        ]);
+
         $mapping = [
-            'admin' => ['create', 'read', 'update', 'delete', 'manage'],
-            'staff' => ['create', 'read', 'update'],
-            'user' => ['read'],
+            'admin' => $adminPermissions,
+            'staff' => $bookingPermissions,
         ];
 
         foreach ($mapping as $role => $permissions) {

@@ -62,6 +62,30 @@
                 </div>
                 
                 <div class="nav-section">
+                    <span class="nav-section-title">Access Control</span>
+                    <a href="{{ route('admin.roles.index') }}" class="nav-item {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                        <i class="bi bi-shield-check"></i>
+                        <span>Roles</span>
+                    </a>
+                    <a href="{{ route('admin.permissions.index') }}" class="nav-item {{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}">
+                        <i class="bi bi-key"></i>
+                        <span>Permissions</span>
+                    </a>
+                    <a href="{{ route('admin.users.permissions.index') }}" class="nav-item {{ request()->routeIs('admin.users.permissions.*') ? 'active' : '' }}">
+                        <i class="bi bi-person-check"></i>
+                        <span>User Permissions</span>
+                    </a>
+                    <a href="{{ route('admin.teams.index') }}" class="nav-item {{ request()->routeIs('admin.teams.*') ? 'active' : '' }}">
+                        <i class="bi bi-diagram-3"></i>
+                        <span>Teams</span>
+                    </a>
+                    <a href="{{ route('admin.access-matrix.index') }}" class="nav-item {{ request()->routeIs('admin.access-matrix.*') ? 'active' : '' }}">
+                        <i class="bi bi-grid-3x3"></i>
+                        <span>Access Matrix</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
                     <span class="nav-section-title">Analytics</span>
                     <a href="{{ route('admin.reports.index') }}" class="nav-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                         <i class="bi bi-graph-up"></i>

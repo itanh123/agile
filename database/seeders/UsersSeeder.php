@@ -19,27 +19,58 @@ class UsersSeeder extends Seeder
         }
 
         $faker = fake();
-        $definitions = array_merge(
-            [['name' => 'System Admin', 'email' => 'admin@example.com', 'role' => 'admin']],
-            collect(range(1, 3))->map(fn ($i) => ['name' => "Staff {$i}", 'email' => "staff{$i}@example.com", 'role' => 'staff'])->all(),
-            collect(range(1, 6))->map(fn ($i) => ['name' => $faker->name(), 'email' => "user{$i}@example.com", 'role' => 'user'])->all()
+        
+        $adminId = DB::table($table)->insertGetId(
+            $this->withTimestamps($table, [
+                'name' => 'Admin',
+                'full_name' => 'System Admin',
+                'email' => 'admin@example.com',
+                'password' => Hash::make('password'),
+                'email_verified_at' => $this->now(),
+                'role_id' => SeederState::$roleIds['admin'] ?? null,
+            ])
         );
 
-        foreach ($definitions as $definition) {
-            $roleName = $definition['role'];
+        $staffIds = [];
+        foreach (range(1, 3) as $i) {
             $id = DB::table($table)->insertGetId(
                 $this->withTimestamps($table, [
-                    'name' => $definition['name'],
-                    'email' => $definition['email'],
+                    'name' => "Staff {$i}",
+                    'full_name' => "Staff User {$i}",
+                    'email' => "staff{$i}@example.com",
                     'password' => Hash::make('password'),
                     'email_verified_at' => $this->now(),
-                    'role_id' => SeederState::$roleIds[$roleName] ?? null,
-                    'role' => $roleName,
+                    'role_id' => SeederState::$roleIds['staff'] ?? null,
                 ])
             );
-
-            SeederState::$userIds[$roleName][] = $id;
-            SeederState::$userIds['all'][] = $id;
+            $staffIds[] = $id;
+            SeederState::$userIds['staff'][] = $id;
         }
+
+        if (count($staffIds) >= 2) {
+            DB::table($table)->where('id', $staffIds[0])->update(['manager_id' => $staffIds[1]]);
+            DB::table($table)->where('id', $staffIds[2])->update(['manager_id' => $staffIds[1]]);
+        }
+
+        foreach (range(1, 6) as $i) {
+            $id = DB::table($table)->insertGetId(
+                $this->withTimestamps($table, [
+                    'name' => $faker->name(),
+                    'full_name' => $faker->name(),
+                    'email' => "user{$i}@example.com",
+                    'password' => Hash::make('password'),
+                    'email_verified_at' => $this->now(),
+                    'role_id' => SeederState::$roleIds['user'] ?? null,
+                ])
+            );
+            SeederState::$userIds['user'][] = $id;
+        }
+
+        SeederState::$userIds['admin'][] = $adminId;
+        SeederState::$userIds['all'] = array_merge(
+            [$adminId],
+            $staffIds,
+            SeederState::$userIds['user'] ?? []
+        );
     }
 }
