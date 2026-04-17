@@ -55,6 +55,8 @@ Route::prefix('customer')->name('customer.')->middleware(['auth', 'role:customer
     Route::resource('reviews', ReviewController::class)->only(['index', 'create', 'store']);
     Route::get('/assistant', [AssistantController::class, 'index'])->name('assistant.index');
     Route::post('/assistant', [AssistantController::class, 'store'])->name('assistant.store');
+    Route::get('/promotions/check', [CustomerBookingController::class, 'checkPromotion'])->name('promotions.check');
+    Route::get('/promotions/available', [CustomerBookingController::class, 'getAvailablePromotions'])->name('promotions.available');
 });
 
 Route::prefix('staff')->name('staff.')->middleware(['auth', 'role:staff'])->group(function () {
@@ -71,6 +73,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('users', AdminUserController::class);
     Route::resource('services', AdminServiceController::class);
     Route::resource('promotions', AdminPromotionController::class);
+    Route::resource('reviews', \App\Http\Controllers\Admin\ReviewController::class)->only(['index', 'destroy']);
+    Route::patch('/reviews/{review}/toggle-visibility', [\App\Http\Controllers\Admin\ReviewController::class, 'toggleVisibility'])->name('reviews.toggle-visibility');
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('bookings.show');
     Route::patch('/bookings/{booking}/assign-staff', [AdminBookingController::class, 'assignStaff'])->name('bookings.assign-staff');

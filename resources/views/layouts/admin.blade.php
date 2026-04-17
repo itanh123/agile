@@ -26,46 +26,52 @@
             
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <span class="nav-section-title">Main</span>
+                    <span class="nav-section-title">Chính</span>
                     <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                         <i class="bi bi-speedometer2"></i>
-                        <span>Dashboard</span>
+                        <span>Bảng tin</span>
                     </a>
                 </div>
                 
                 <div class="nav-section">
-                    <span class="nav-section-title">Management</span>
+                    <span class="nav-section-title">Quản lý</span>
                     <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <i class="bi bi-people"></i>
-                        <span>Users</span>
+                        <span>Người dùng</span>
                         @php $userCount = \App\Models\User::count(); @endphp
                         <span class="nav-badge">{{ $userCount }}</span>
                     </a>
                     <a href="{{ route('admin.services.index') }}" class="nav-item {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
                         <i class="bi bi-gem"></i>
-                        <span>Services</span>
+                        <span>Dịch vụ</span>
                         @php $serviceCount = \App\Models\Service::count(); @endphp
                         <span class="nav-badge">{{ $serviceCount }}</span>
                     </a>
                     <a href="{{ route('admin.bookings.index') }}" class="nav-item {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                         <i class="bi bi-calendar-check"></i>
-                        <span>Bookings</span>
-                        @php $bookingCount = \App\Models\Booking::whereIn('status', ['pending', 'confirmed'])->count(); @endphp
+                        <span>Theo dõi trạng thái dịch vụ</span>
+                        @php $bookingCount = \App\Models\Booking::whereIn('status', ['pending', 'confirmed', 'processing'])->count(); @endphp
                         @if($bookingCount > 0)
                         <span class="nav-badge nav-badge-warning">{{ $bookingCount }}</span>
                         @endif
                     </a>
                     <a href="{{ route('admin.promotions.index') }}" class="nav-item {{ request()->routeIs('admin.promotions.*') ? 'active' : '' }}">
                         <i class="bi bi-tag"></i>
-                        <span>Promotions</span>
+                        <span>Mã giảm giá</span>
+                    </a>
+                    <a href="{{ route('admin.reviews.index') }}" class="nav-item {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                        <i class="bi bi-chat-left-quote"></i>
+                        <span>Đánh giá dịch vụ</span>
+                        @php $reviewCount = \App\Models\Review::count(); @endphp
+                        <span class="nav-badge">{{ $reviewCount }}</span>
                     </a>
                 </div>
                 
                 <div class="nav-section">
-                    <span class="nav-section-title">Analytics</span>
+                    <span class="nav-section-title">Thống kê</span>
                     <a href="{{ route('admin.reports.index') }}" class="nav-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                         <i class="bi bi-graph-up"></i>
-                        <span>Reports</span>
+                        <span>Báo cáo doanh thu</span>
                     </a>
                 </div>
             </nav>

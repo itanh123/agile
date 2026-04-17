@@ -16,9 +16,10 @@ class DashboardController extends Controller
         $totalBookings = Booking::count();
         $totalServices = Service::count();
         $totalRevenue = Booking::where('status', 'completed')->sum('total_amount');
+        $totalPromotions = \App\Models\Promotion::where('is_active', 1)->count();
         $recentBookings = Booking::with(['user', 'pet'])->latest()->take(8)->get();
         $statusSummary = Booking::select('status', DB::raw('COUNT(*) as total'))->groupBy('status')->pluck('total', 'status');
 
-        return view('admin.dashboard', compact('totalUsers', 'totalBookings', 'totalServices', 'totalRevenue', 'recentBookings', 'statusSummary'));
+        return view('admin.dashboard', compact('totalUsers', 'totalBookings', 'totalServices', 'totalRevenue', 'totalPromotions', 'recentBookings', 'statusSummary'));
     }
 }

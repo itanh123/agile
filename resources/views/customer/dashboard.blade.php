@@ -10,27 +10,36 @@
         </div>
 
         <div class="row g-4 mb-5">
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-3">
                 <a href="{{ route('customer.pets.index') }}" class="text-decoration-none">
-                    <div class="glass-card p-4 text-center">
+                    <div class="glass-card p-4 text-center h-100">
                         <div class="display-6 mb-3" style="color: var(--primary)">🐾</div>
                         <h5 class="text-white fw-bold">My Pets</h5>
                         <p class="text-muted small mb-0">Manage your furry family members</p>
                     </div>
                 </a>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-3">
                 <a href="{{ route('customer.bookings.index') }}" class="text-decoration-none">
-                    <div class="glass-card p-4 text-center">
+                    <div class="glass-card p-4 text-center h-100">
                         <div class="display-6 mb-3" style="color: var(--secondary)">📅</div>
                         <h5 class="text-white fw-bold">My Bookings</h5>
                         <p class="text-muted small mb-0">View and track your appointments</p>
                     </div>
                 </a>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-3">
+                <a href="{{ route('customer.reviews.index') }}" class="text-decoration-none">
+                    <div class="glass-card p-4 text-center h-100">
+                        <div class="display-6 mb-3" style="color: #fbbf24">⭐</div>
+                        <h5 class="text-white fw-bold">My Reviews</h5>
+                        <p class="text-muted small mb-0">Rate our services & view history</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-3">
                 <a href="{{ route('customer.assistant.index') }}" class="text-decoration-none">
-                    <div class="glass-card p-4 text-center">
+                    <div class="glass-card p-4 text-center h-100">
                         <div class="display-6 mb-3" style="color: var(--accent)">🤖</div>
                         <h5 class="text-white fw-bold">AI Assistant</h5>
                         <p class="text-muted small mb-0">Get instant advice for your pets</p>

@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-lg-8">
         <div class="admin-form">
-            <form method="POST" action="{{ route('admin.users.store') }}">
+            <form method="POST" action="{{ route('admin.users.store') }}" novalidate>
                 @csrf
                 
                 <div class="row g-3">

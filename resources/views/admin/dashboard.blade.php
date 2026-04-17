@@ -64,7 +64,7 @@
                 </a>
                 <a href="{{ route('admin.promotions.create') }}" class="quick-action-card">
                     <i class="bi bi-tag"></i>
-                    <h5>Create Promo</h5>
+                    <h5>Create Voucher</h5>
                 </a>
                 <a href="{{ route('admin.reports.index') }}" class="quick-action-card">
                     <i class="bi bi-file-earmark-bar-graph"></i>
@@ -126,8 +126,8 @@
                     <i class="bi bi-tag" style="color: var(--admin-secondary);"></i>
                 </div>
                 <div>
-                    <h5 class="mb-1">Promotions</h5>
-                    <p class="text-muted mb-0" style="font-size: 0.8rem;">Quản lý khuyến mãi</p>
+                    <h5 class="mb-1">Vouchers</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.8rem;">Quản lý mã giảm giá</p>
                 </div>
                 <i class="bi bi-chevron-right ms-auto" style="color: var(--admin-text-dim);"></i>
             </div>

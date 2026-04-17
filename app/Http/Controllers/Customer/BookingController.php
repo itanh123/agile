@@ -55,11 +55,25 @@ class BookingController extends Controller
                 ->where('start_at', '<=', now())
                 ->where('end_at', '>=', now())
                 ->first();
+
             if ($promotion) {
+                // Check min order amount
+                if ($promotion->min_order_amount > 0 && $subtotal < $promotion->min_order_amount) {
+                    return back()->withInput()->with('error', 'Minimum order amount for this voucher is ' . number_format($promotion->min_order_amount, 0) . 'đ');
+                }
+
+                // Check usage limit
+                if ($promotion->usage_limit > 0 && $promotion->used_count >= $promotion->usage_limit) {
+                    return back()->withInput()->with('error', 'This voucher has reached its usage limit.');
+                }
+
                 $promotionId = $promotion->id;
                 $discount = $promotion->discount_type === 'percent'
                     ? ($subtotal * $promotion->discount_value / 100)
                     : min($subtotal, $promotion->discount_value);
+                
+                // Increment used count
+                $promotion->increment('used_count');
             }
         }
 
@@ -146,5 +160,63 @@ class BookingController extends Controller
         ]);
 
         return back()->with('success', 'Booking rescheduled.');
+    }
+
+    public function checkPromotion(Request $request)
+    {
+        $code = $request->query('code');
+        $subtotal = $request->query('subtotal', 0);
+
+        if (empty($code)) {
+            return response()->json(['success' => false, 'message' => 'Vui lòng nhập mã giảm giá.']);
+        }
+
+        $promotion = Promotion::where('code', $code)
+            ->where('is_active', true)
+            ->where('start_at', '<=', now())
+            ->where('end_at', '>=', now())
+            ->first();
+
+        if (!$promotion) {
+            return response()->json(['success' => false, 'message' => 'Mã giảm giá không hợp lệ hoặc đã hết hạn.']);
+        }
+
+        // Check min order amount
+        if ($promotion->min_order_amount > 0 && $subtotal < $promotion->min_order_amount) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Đơn hàng tối thiểu ' . number_format($promotion->min_order_amount, 0) . ' VNĐ để dùng mã này.'
+            ]);
+        }
+
+        // Check usage limit
+        if ($promotion->usage_limit > 0 && $promotion->getOriginal('used_count') >= $promotion->usage_limit) {
+            return response()->json(['success' => false, 'message' => 'Mã giảm giá này đã hết lượt sử dụng.']);
+        }
+
+        $discount = $promotion->discount_type === 'percent'
+            ? ($subtotal * $promotion->discount_value / 100)
+            : min($subtotal, $promotion->discount_value);
+
+        return response()->json([
+            'success' => true,
+            'discount' => $discount,
+            'discount_display' => number_format($discount, 0) . ' VNĐ',
+            'message' => 'Áp dụng mã giảm giá thành công!',
+            'title' => $promotion->title
+        ]);
+    }
+
+    public function getAvailablePromotions()
+    {
+        $promotions = Promotion::where('is_active', true)
+            ->where('end_at', '>=', now())
+            ->orderBy('end_at', 'asc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'promotions' => $promotions
+        ]);
     }
 }

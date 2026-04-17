@@ -17,7 +17,7 @@ class ReportController extends Controller
         $totalCustomers = User::whereHas('role', fn($q) => $q->where('slug', 'customer'))->count();
         $avgBookingValue = $totalBookings > 0 ? $totalRevenue / $totalBookings : 0;
 
-        $revenueByMonth = Booking::select(DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"), DB::raw('SUM(total_amount) as total'), DB::raw('COUNT(*) as bookings'))
+        $revenueByMonth = Booking::select(DB::raw("DATE_FORMAT(bookings.created_at, '%Y-%m') as month"), DB::raw('SUM(total_amount) as total'), DB::raw('COUNT(*) as bookings'))
             ->where('status', 'completed')
             ->groupBy('month')
             ->orderBy('month', 'desc')

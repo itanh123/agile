@@ -48,7 +48,7 @@ class ServiceController extends Controller
 
         $totalBookings = $service->bookings->count();
         $totalRevenue = $service->bookings->where('status', 'completed')->sum('price');
-        $thisMonthBookings = $service->bookings->whereMonth('created_at', now()->month)->count();
+        $thisMonthBookings = $service->bookings()->whereMonth('bookings.created_at', now()->month)->whereYear('bookings.created_at', now()->year)->count();
 
         return view('admin.services.show', compact('service', 'totalBookings', 'totalRevenue', 'thisMonthBookings'));
     }

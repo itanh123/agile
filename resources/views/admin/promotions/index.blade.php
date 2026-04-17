@@ -1,56 +1,69 @@
 @extends('layouts.admin')
-@section('title', 'Promotions Management')
+@section('title', 'Quản lý Voucher')
 
 @push('breadcrumbs')
 <i class="bi bi-chevron-right"></i>
-<span>Promotions</span>
+<span>Vouchers</span>
 @endpush
 
 @section('content')
-<div class="page-header">
-    <h2>Promotions Management</h2>
-    <a href="{{ route('admin.promotions.create') }}" class="btn-admin btn-admin-primary">
-        <i class="bi bi-plus-lg"></i> Create Promotion
-    </a>
+<div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+    <div>
+        <h2 class="mb-1">Quản lý Voucher</h2>
+        <p class="text-muted mb-0">Tạo và quản lý các mã giảm giá cho khách hàng.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <form action="{{ route('admin.promotions.index') }}" method="GET" class="d-flex">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control-admin" placeholder="Tìm kiếm mã hoặc tiêu đề..." value="{{ request('search') }}">
+                <button class="btn-admin btn-admin-secondary" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+        <a href="{{ route('admin.promotions.create') }}" class="btn-admin btn-admin-primary">
+            <i class="bi bi-plus-lg"></i> Thêm Voucher
+        </a>
+    </div>
 </div>
 
-<!-- Stats -->
-<div class="row g-3 mb-4">
+<!-- Thống kê -->
+<div class="row g-3 mb-4 mt-1">
     <div class="col-md-3">
-        <div class="admin-card text-center">
+        <div class="admin-card text-center border-start border-4 border-primary">
             <h3 class="mb-1">{{ $promotions->total() }}</h3>
-            <p class="text-muted mb-0" style="font-size: 0.8rem;">Total Promotions</p>
+            <p class="text-muted mb-0" style="font-size: 0.8rem;">Tổng số Voucher</p>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="admin-card text-center">
-            <h3 class="mb-1">{{ $promotions->where('is_active', 1)->count() }}</h3>
-            <p class="text-muted mb-0" style="font-size: 0.8rem;">Active</p>
+        <div class="admin-card text-center border-start border-4 border-success">
+            <h3 class="mb-1" style="color: var(--admin-success);">{{ $activeCount ?? 0 }}</h3>
+            <p class="text-muted mb-0" style="font-size: 0.8rem;">Đang hoạt động</p>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="admin-card text-center" style="background: rgba(239, 68, 68, 0.1);">
+        <div class="admin-card text-center border-start border-4 border-danger">
             <h3 class="mb-1" style="color: var(--admin-danger);">{{ $expiredPromotions ?? 0 }}</h3>
-            <p class="text-muted mb-0" style="font-size: 0.8rem;">Expired</p>
+            <p class="text-muted mb-0" style="font-size: 0.8rem;">Đã hết hạn</p>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="admin-card text-center" style="background: rgba(16, 185, 129, 0.1);">
-            <h3 class="mb-1" style="color: var(--admin-success);">{{ number_format($totalDiscount ?? 0, 0) }}đ</h3>
-            <p class="text-muted mb-0" style="font-size: 0.8rem;">Total Discount Value</p>
+        <div class="admin-card text-center border-start border-4 border-info">
+            <h3 class="mb-1" style="color: var(--admin-info);">{{ number_format($totalSavings ?? 0, 0) }}đ</h3>
+            <p class="text-muted mb-0" style="font-size: 0.8rem;">Tổng tiền đã giảm</p>
         </div>
     </div>
 </div>
 
-<!-- Promotions Grid -->
+<!-- Danh sách Voucher -->
 @if($promotions->isEmpty())
     <div class="admin-card">
         <div class="empty-state">
-            <i class="bi bi-tag"></i>
-            <h4>No promotions found</h4>
-            <p>Create your first promotion to attract customers.</p>
+            <i class="bi bi-tag text-muted" style="font-size: 4rem;"></i>
+            <h4 class="mt-3">Không tìm thấy voucher nào</h4>
+            <p>Hãy tạo mã giảm giá đầu tiên để thu hút khách hàng của bạn.</p>
             <a href="{{ route('admin.promotions.create') }}" class="btn-admin btn-admin-primary">
-                <i class="bi bi-plus-lg"></i> Create Promotion
+                <i class="bi bi-plus-lg"></i> Thêm Voucher
             </a>
         </div>
     </div>
@@ -58,53 +71,68 @@
     <div class="row g-4">
         @foreach($promotions as $promotion)
             <div class="col-md-6 col-xl-4">
-                <div class="admin-card h-100">
+                <div class="admin-card h-100 position-relative transition-all hover-shadow">
                     <div class="d-flex justify-content-between align-items-start mb-3">
-                        <span class="badge-code" style="background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary)); color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.8rem; font-weight: 700;">
+                        <span class="badge-code" style="background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary)); color: white; padding: 0.4rem 0.8rem; border-radius: 0.5rem; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px;">
                             {{ $promotion->code }}
                         </span>
                         <span class="status-badge {{ $promotion->is_active ? 'active' : 'inactive' }}">
                             <i class="bi bi-{{ $promotion->is_active ? 'check-circle' : 'x-circle' }}"></i>
-                            {{ $promotion->is_active ? 'Active' : 'Inactive' }}
+                            {{ $promotion->is_active ? 'Hoạt động' : 'Tạm dừng' }}
                         </span>
                     </div>
                     
                     <h5 class="mb-2">{{ $promotion->title }}</h5>
-                    <p class="text-muted mb-3" style="font-size: 0.85rem;">{{ Str::limit($promotion->description, 80) }}</p>
+                    <p class="text-muted mb-3" style="font-size: 0.85rem; height: 38px; overflow: hidden;">{{ Str::limit($promotion->description, 80) }}</p>
                     
                     <div class="d-flex align-items-center gap-4 mb-3">
-                        <div>
-                            <span class="fs-4 fw-bold" style="color: var(--admin-secondary);">
+                        <div class="p-2 rounded bg-light flex-fill">
+                            <span class="text-muted d-block" style="font-size: 0.7rem; text-transform: uppercase;">Giảm giá</span>
+                            <span class="fs-4 fw-bold text-primary">
                                 @if($promotion->discount_type === 'percent')
-                                    {{ $promotion->discount_value }}%
+                                    {{ (float)$promotion->discount_value }}%
                                 @else
                                     {{ number_format($promotion->discount_value, 0) }}đ
                                 @endif
                             </span>
-                            <span class="text-muted" style="font-size: 0.75rem;"> discount</span>
+                        </div>
+                        <div class="p-2 rounded bg-light flex-fill">
+                            <span class="text-muted d-block" style="font-size: 0.7rem; text-transform: uppercase;">Sử dụng</span>
+                            <span class="fs-4 fw-bold text-dark">
+                                {{ $promotion->used_count ?? 0 }}<span class="text-muted fs-6" style="font-weight: 400;">/{{ $promotion->usage_limit ?: '∞' }}</span>
+                            </span>
                         </div>
                     </div>
                     
-                    <div class="detail-item" style="border-top: 1px solid var(--admin-border); padding-top: 1rem; margin-top: 0.5rem;">
-                        <span class="detail-label"><i class="bi bi-calendar me-2"></i>Valid</span>
-                        <span class="detail-value">
-                            {{ $promotion->start_at ? \Carbon\Carbon::parse($promotion->start_at)->format('d/m') : 'N/A' }} 
-                            - 
-                            {{ $promotion->end_at ? \Carbon\Carbon::parse($promotion->end_at)->format('d/m/Y') : 'Unlimited' }}
-                        </span>
+                    <div class="detail-item mt-4 border-top pt-3">
+                        <div class="d-flex justify-content-between mb-1" style="font-size: 0.8rem;">
+                            <span class="text-muted"><i class="bi bi-calendar-event me-2"></i>Thời hạn:</span>
+                            <span class="fw-medium text-dark">
+                                {{ $promotion->start_at ? \Carbon\Carbon::parse($promotion->start_at)->format('d/m/y') : 'N/A' }} 
+                                - 
+                                {{ $promotion->end_at ? \Carbon\Carbon::parse($promotion->end_at)->format('d/m/y') : 'Vô thời hạn' }}
+                            </span>
+                        </div>
+                        
+                        @if($promotion->min_order_amount > 0)
+                            <div class="d-flex justify-content-between mb-1" style="font-size: 0.8rem;">
+                                <span class="text-muted"><i class="bi bi-cart me-2"></i>Đơn tối thiểu:</span>
+                                <span class="fw-medium text-dark">{{ number_format($promotion->min_order_amount, 0) }}đ</span>
+                            </div>
+                        @endif
                     </div>
                     
-                    <div class="d-flex gap-2 mt-3">
+                    <div class="d-flex gap-2 mt-4 pt-2">
                         <a href="{{ route('admin.promotions.show', $promotion) }}" class="btn-admin btn-admin-secondary btn-admin-sm flex-fill">
-                            <i class="bi bi-eye"></i> View
+                            <i class="bi bi-eye"></i> Chi tiết
                         </a>
                         <a href="{{ route('admin.promotions.edit', $promotion) }}" class="btn-admin btn-admin-primary btn-admin-sm">
-                            <i class="bi bi-pencil"></i>
+                            <i class="bi bi-pencil"></i> Sửa
                         </a>
                         <form action="{{ route('admin.promotions.destroy', $promotion) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn-admin btn-admin-danger btn-admin-sm" onclick="return confirm('Delete this promotion?')">
+                            <button type="submit" class="btn-admin btn-admin-danger btn-admin-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa voucher này?')">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>

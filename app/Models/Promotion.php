@@ -27,4 +27,8 @@ class Promotion extends Model
         'start_at' => 'datetime',
         'end_at' => 'datetime',
     ];
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

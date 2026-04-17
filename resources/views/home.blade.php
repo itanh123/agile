@@ -20,6 +20,35 @@
             </div>
         </div>
     </section>
+    
+    @if($promotions->isNotEmpty())
+    <div class="mt-5 pt-4 animate-fade-up">
+        <div class="glass-card p-4 overflow-hidden position-relative" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1)); border: 1px solid rgba(255,255,255,0.05);">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="p-2 rounded bg-primary text-white">
+                    <i class="bi bi-stars"></i>
+                </div>
+                <h3 class="text-white fw-bold mb-0">Ưu Đãi Đặc Biệt</h3>
+            </div>
+            <div class="row g-4">
+                @foreach($promotions as $promo)
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-primary px-3 py-2 fw-bold" style="letter-spacing: 1px;">{{ $promo->code }}</span>
+                            <span class="text-primary fw-bold fs-4">
+                                -{{ $promo->discount_type === 'percent' ? (float)$promo->discount_value.'%' : number_format($promo->discount_value, 0).'đ' }}
+                            </span>
+                        </div>
+                        <h5 class="text-white fw-bold mb-2">{{ $promo->title }}</h5>
+                        <p class="text-muted small mb-0">{{ Str::limit($promo->description, 80) }}</p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    @endif
 
     <div class="mt-5 pt-5">
         <div class="d-flex justify-content-between align-items-center mb-5">
