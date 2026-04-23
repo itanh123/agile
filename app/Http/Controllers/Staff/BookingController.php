@@ -14,8 +14,11 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Booking::with(['user', 'pet', 'services'])
-            ->where('staff_id', auth()->id());
+        $query = Booking::with(['user', 'pet', 'services']);
+            
+        if (auth()->user()->role?->slug !== 'admin') {
+            $query->where('staff_id', auth()->id());
+        }
 
         if ($request->filled('date')) {
             $query->whereDate('appointment_at', Carbon::parse($request->date));
@@ -40,7 +43,7 @@ class BookingController extends Controller
 
     public function show(Booking $booking)
     {
-        abort_unless($booking->staff_id === auth()->id(), 403);
+        abort_unless($booking->staff_id === auth()->id() || auth()->user()->role?->slug === 'admin', 403);
         
         $booking->load(['user', 'pet', 'services', 'images.uploader', 'logs.changedByUser']);
 
@@ -49,10 +52,10 @@ class BookingController extends Controller
 
     public function updateStatus(Request $request, Booking $booking)
     {
-        abort_unless($booking->staff_id === auth()->id(), 403);
+        abort_unless($booking->staff_id === auth()->id() || auth()->user()->role?->slug === 'admin', 403);
 
         $validStatuses = ['confirmed', 'processing', 'completed', 'cancelled'];
-        
+
         $request->validate([
             'status' => 'required|in:' . implode(',', $validStatuses),
             'reason' => 'nullable|string|max:500',
@@ -74,12 +77,15 @@ class BookingController extends Controller
             'changed_at' => now(),
         ]);
 
+        // RQ08: Gửi thông báo cập nhật trạng thái cho khách hàng
+        $booking->notifyStatusChange($oldStatus, $newStatus);
+
         return back()->with('success', 'Trạng thái booking đã được cập nhật thành công.');
     }
 
     public function uploadImage(Request $request, Booking $booking)
     {
-        abort_unless($booking->staff_id === auth()->id(), 403);
+        abort_unless($booking->staff_id === auth()->id() || auth()->user()->role?->slug === 'admin', 403);
 
         $request->validate([
             'images' => 'required',
@@ -105,27 +111,31 @@ class BookingController extends Controller
                     'caption' => $request->caption ?? 'Hình ảnh tiến độ',
                     'taken_at' => now(),
                 ]);
-                
+
                 $uploadedImages[] = $path;
             }
         }
 
-        if (count($uploadedImages) > 0) {
+        $imageCount = count($uploadedImages);
+        if ($imageCount > 0) {
             BookingStatusLog::create([
                 'booking_id' => $booking->id,
                 'status' => $booking->status,
                 'changed_by' => auth()->id(),
-                'note' => 'Đã tải lên ' . count($uploadedImages) . ' hình ảnh tiến độ.',
+                'note' => 'Đã tải lên ' . $imageCount . ' hình ảnh tiến độ.',
                 'changed_at' => now(),
             ]);
+
+            // RQ12: Thông báo khi có hình ảnh thú cưng mới
+            $booking->notifyPetImageUploaded($imageCount);
         }
 
-        return back()->with('success', count($uploadedImages) . ' hình ảnh đã được tải lên thành công.');
+        return back()->with('success', $imageCount . ' hình ảnh đã được tải lên thành công.');
     }
 
     public function addNote(Request $request, Booking $booking)
     {
-        abort_unless($booking->staff_id === auth()->id(), 403);
+        abort_unless($booking->staff_id === auth()->id() || auth()->user()->role?->slug === 'admin', 403);
 
         $request->validate([
             'note' => 'required|string|min:3|max:1000',

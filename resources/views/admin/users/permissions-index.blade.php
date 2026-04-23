@@ -17,17 +17,9 @@
     <div class="card border-0 shadow-sm">
         <div class="card-body">
             <form method="GET" class="row g-3 mb-4">
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <input type="text" name="search" class="form-control" 
                            placeholder="Tìm theo tên, email..." value="{{ request('search') }}">
-                </div>
-                <div class="col-md-3">
-                    <select name="role" class="form-select">
-                        <option value="">-- Tất cả vai trò --</option>
-                        @foreach($roles as $role)
-                            <option value="{{ $role->id }}" @selected(request('role') == $role->id)>{{ $role->name }}</option>
-                        @endforeach
-                    </select>
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">
@@ -176,9 +168,7 @@
 
 @push('scripts')
 <script>
-    let managers = @json(\App\Models\User::with('role')->get()->map(function($u) {
-        return ['id' => $u->id, 'name' => $u->fullname ?? $u->name, 'role' => $u->role?->name];
-    }));
+    let managers = @json($staffMembers);
 
     function showManagerModal(userId, userName, currentManagerId) {
         document.getElementById('managerUserName').textContent = 'Gán quản lý cho: ' + userName;

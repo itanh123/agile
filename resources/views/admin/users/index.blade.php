@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends($baseLayout)
 @section('title', 'Users Management')
 
 @push('breadcrumbs')

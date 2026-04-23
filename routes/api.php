@@ -17,3 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::any('/vnpay/ipn', [App\Http\Controllers\Customer\PaymentController::class, 'vnpayIpn'])->name('payments.vnpay.ipn');

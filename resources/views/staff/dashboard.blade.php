@@ -83,6 +83,7 @@
 
     <!-- Quick Actions -->
     <div class="row g-3 mb-4">
+        @if(auth()->user()->hasPermission('booking.view_assigned'))
         <div class="col-md-4">
             <a href="{{ route('staff.bookings.index') }}" class="quick-action-card">
                 <i class="bi bi-calendar-plus"></i>
@@ -90,6 +91,9 @@
                 <p class="text-muted mb-0 small">Danh sách đầy đủ các công việc</p>
             </a>
         </div>
+        @endif
+
+        @if(auth()->user()->hasPermission('booking.update_status'))
         <div class="col-md-4">
             <a href="{{ route('staff.bookings.index', ['status' => 'processing']) }}" class="quick-action-card">
                 <i class="bi bi-arrow-repeat"></i>
@@ -97,6 +101,9 @@
                 <p class="text-muted mb-0 small">Cập nhật tiến độ booking</p>
             </a>
         </div>
+        @endif
+
+        @if(auth()->user()->hasPermission('booking.upload_image'))
         <div class="col-md-4">
             <a href="{{ route('staff.bookings.index') }}" class="quick-action-card">
                 <i class="bi bi-camera"></i>
@@ -104,6 +111,7 @@
                 <p class="text-muted mb-0 small">Đăng hình tiến độ cho khách</p>
             </a>
         </div>
+        @endif
     </div>
 
     <!-- Today's Bookings -->

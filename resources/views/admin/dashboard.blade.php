@@ -8,7 +8,7 @@
         <div class="admin-card stats-card users">
             <i class="bi bi-people stats-icon"></i>
             <div class="admin-card-header">
-                <p class="admin-card-title">Total Users</p>
+                <p class="admin-card-title">Tổng người dùng</p>
             </div>
             <h2 class="admin-card-value">{{ number_format($totalUsers) }}</h2>
             <p class="text-muted mt-1 mb-0" style="font-size: 0.8rem;">Người dùng đã đăng ký</p>
@@ -18,7 +18,7 @@
         <div class="admin-card stats-card bookings">
             <i class="bi bi-calendar-check stats-icon"></i>
             <div class="admin-card-header">
-                <p class="admin-card-title">Total Bookings</p>
+                <p class="admin-card-title">Tổng lịch hẹn</p>
             </div>
             <h2 class="admin-card-value">{{ number_format($totalBookings) }}</h2>
             <p class="text-muted mt-1 mb-0" style="font-size: 0.8rem;">Lịch hẹn được tạo</p>
@@ -28,7 +28,7 @@
         <div class="admin-card stats-card services">
             <i class="bi bi-gem stats-icon"></i>
             <div class="admin-card-header">
-                <p class="admin-card-title">Active Services</p>
+                <p class="admin-card-title">Dịch vụ hiện có</p>
             </div>
             <h2 class="admin-card-value">{{ number_format($totalServices) }}</h2>
             <p class="text-muted mt-1 mb-0" style="font-size: 0.8rem;">Dịch vụ đang hoạt động</p>
@@ -38,9 +38,9 @@
         <div class="admin-card stats-card revenue">
             <i class="bi bi-currency-dollar stats-icon"></i>
             <div class="admin-card-header">
-                <p class="admin-card-title">Total Revenue</p>
+                <p class="admin-card-title">Tổng doanh thu</p>
             </div>
-            <h2 class="admin-card-value">{{ number_format($totalRevenue, 0) }}đ</h2>
+            <h2 class="admin-card-value">{{ number_format($totalRevenue, 0, ',', '.') }}đ</h2>
             <p class="text-muted mt-1 mb-0" style="font-size: 0.8rem;">Doanh thu tổng cộng</p>
         </div>
     </div>
@@ -51,24 +51,24 @@
     <div class="col-12">
         <div class="admin-card">
             <div class="admin-card-header">
-                <h4 class="admin-card-title">Quick Actions</h4>
+                <h4 class="admin-card-title">Thao tác nhanh</h4>
             </div>
             <div class="quick-actions">
                 <a href="{{ route('admin.users.create') }}" class="quick-action-card">
                     <i class="bi bi-person-plus"></i>
-                    <h5>Add User</h5>
+                    <h5>Thêm User</h5>
                 </a>
                 <a href="{{ route('admin.services.create') }}" class="quick-action-card">
                     <i class="bi bi-plus-circle"></i>
-                    <h5>New Service</h5>
+                    <h5>Dịch vụ mới</h5>
                 </a>
                 <a href="{{ route('admin.promotions.create') }}" class="quick-action-card">
                     <i class="bi bi-tag"></i>
-                    <h5>Create Promo</h5>
+                    <h5>Tạo KM</h5>
                 </a>
                 <a href="{{ route('admin.reports.index') }}" class="quick-action-card">
                     <i class="bi bi-file-earmark-bar-graph"></i>
-                    <h5>View Reports</h5>
+                    <h5>Xem báo cáo</h5>
                 </a>
             </div>
         </div>
@@ -84,7 +84,7 @@
                     <i class="bi bi-people" style="color: var(--admin-primary);"></i>
                 </div>
                 <div>
-                    <h5 class="mb-1">Users</h5>
+                    <h5 class="mb-1">Người dùng</h5>
                     <p class="text-muted mb-0" style="font-size: 0.8rem;">Quản lý người dùng</p>
                 </div>
                 <i class="bi bi-chevron-right ms-auto" style="color: var(--admin-text-dim);"></i>
@@ -98,7 +98,7 @@
                     <i class="bi bi-gem" style="color: var(--admin-success);"></i>
                 </div>
                 <div>
-                    <h5 class="mb-1">Services</h5>
+                    <h5 class="mb-1">Dịch vụ</h5>
                     <p class="text-muted mb-0" style="font-size: 0.8rem;">Quản lý dịch vụ</p>
                 </div>
                 <i class="bi bi-chevron-right ms-auto" style="color: var(--admin-text-dim);"></i>
@@ -112,7 +112,7 @@
                     <i class="bi bi-calendar-check" style="color: var(--admin-info);"></i>
                 </div>
                 <div>
-                    <h5 class="mb-1">Bookings</h5>
+                    <h5 class="mb-1">Lịch hẹn</h5>
                     <p class="text-muted mb-0" style="font-size: 0.8rem;">Quản lý lịch hẹn</p>
                 </div>
                 <i class="bi bi-chevron-right ms-auto" style="color: var(--admin-text-dim);"></i>
@@ -126,7 +126,7 @@
                     <i class="bi bi-tag" style="color: var(--admin-secondary);"></i>
                 </div>
                 <div>
-                    <h5 class="mb-1">Promotions</h5>
+                    <h5 class="mb-1">Khuyến mãi</h5>
                     <p class="text-muted mb-0" style="font-size: 0.8rem;">Quản lý khuyến mãi</p>
                 </div>
                 <i class="bi bi-chevron-right ms-auto" style="color: var(--admin-text-dim);"></i>

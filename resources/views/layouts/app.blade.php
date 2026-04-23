@@ -69,6 +69,24 @@
             </div>
         </div>
     @endif
+
+    @if(session('error'))
+        <div class="alert glass border-0 text-danger mb-4 animate-fade-up">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ session('error') }}
+            </div>
+        </div>
+    @endif
+
+    @if(session('info'))
+        <div class="alert glass border-0 text-info mb-4 animate-fade-up">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                {{ session('info') }}
+            </div>
+        </div>
+    @endif
     
     @if($errors->any())
         <div class="alert glass border-0 text-danger mb-4 animate-fade-up">

@@ -12,7 +12,9 @@ class UserPermissionController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::with('role', 'directPermissions');
+        $staffRole = Role::where('slug', 'staff')->firstOrFail();
+        $query = User::with('role', 'directPermissions')
+            ->where('role_id', $staffRole->id);
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -23,14 +25,19 @@ class UserPermissionController extends Controller
             });
         }
 
-        if ($request->filled('role')) {
-            $query->where('role_id', $request->role);
-        }
-
         $users = $query->latest()->paginate(20);
-        $roles = Role::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.users.permissions-index', compact('users', 'roles'));
+        $staffMembers = User::whereHas('role', function($q) { 
+            $q->where('slug', 'staff'); 
+        })->get()->map(function($u) {
+            return [
+                'id' => $u->id, 
+                'name' => $u->fullname ?? $u->name, 
+                'role' => $u->role?->name
+            ];
+        });
+
+        return view('admin.users.permissions-index', compact('users', 'staffMembers'));
     }
 
     public function edit(User $user)

@@ -38,6 +38,7 @@ class BookingController extends Controller
     public function assignStaff(Request $request, Booking $booking)
     {
         $data = $request->validate(['staff_id' => 'required|exists:users,id']);
+        $oldStatus = $booking->status;
         $booking->update(['staff_id' => $data['staff_id'], 'status' => 'confirmed']);
 
         BookingStatusLog::create([
@@ -47,6 +48,10 @@ class BookingController extends Controller
             'note' => 'Staff assigned by admin',
             'changed_at' => now(),
         ]);
+
+        // RQ23: Thông báo khi nhân viên được phân công
+        $booking->notifyStaffAssigned();
+        $booking->notifyConfirmed();
 
         return back()->with('success', 'Staff assigned.');
     }

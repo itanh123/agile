@@ -38,7 +38,7 @@ class BookingController extends Controller
             'service_ids.*' => 'exists:services,id',
             'appointment_at' => 'required|date|after:now',
             'service_mode' => 'required|in:at_store,at_home',
-            'payment_method' => 'required|in:cash,vnpay,momo,transfer',
+            'payment_method' => 'required|in:cash,vnpay',
             'promotion_code' => 'nullable|string',
             'note' => 'nullable|string',
         ]);
@@ -95,6 +95,15 @@ class BookingController extends Controller
             'changed_at' => now(),
         ]);
 
+        // RQ07: Gửi xác nhận đặt lịch cho khách hàng
+        $booking->notifyConfirmation();
+
+        // Nếu chọn VNPay, chuyển hướng sang xử lý thanh toán luôn
+        if ($booking->payment_method === 'vnpay') {
+            return redirect()->route('customer.payments.process', ['booking' => $booking, 'method' => 'vnpay']);
+        }
+
+        // Nếu chọn tiền mặt
         Payment::create([
             'booking_id' => $booking->id,
             'transaction_code' => 'PAY-' . strtoupper(Str::random(8)),
@@ -103,7 +112,7 @@ class BookingController extends Controller
             'amount' => $booking->total_amount,
         ]);
 
-        return redirect()->route('customer.bookings.show', $booking)->with('success', 'Booking created successfully.');
+        return redirect()->route('customer.bookings.show', $booking)->with('success', 'Bạn đã đặt lịch thành công.');
     }
 
     public function show(Booking $booking)

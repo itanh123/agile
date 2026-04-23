@@ -26,30 +26,30 @@
             
             <nav class="sidebar-nav">
                 <div class="nav-section">
-                    <span class="nav-section-title">Main</span>
+                    <span class="nav-section-title">Chính</span>
                     <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                         <i class="bi bi-speedometer2"></i>
-                        <span>Dashboard</span>
+                        <span>Bảng điều khiển</span>
                     </a>
                 </div>
                 
                 <div class="nav-section">
-                    <span class="nav-section-title">Management</span>
+                    <span class="nav-section-title">Quản lý</span>
                     <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                         <i class="bi bi-people"></i>
-                        <span>Users</span>
+                        <span>Người dùng</span>
                         @php $userCount = \App\Models\User::count(); @endphp
                         <span class="nav-badge">{{ $userCount }}</span>
                     </a>
                     <a href="{{ route('admin.services.index') }}" class="nav-item {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
                         <i class="bi bi-gem"></i>
-                        <span>Services</span>
+                        <span>Dịch vụ</span>
                         @php $serviceCount = \App\Models\Service::count(); @endphp
                         <span class="nav-badge">{{ $serviceCount }}</span>
                     </a>
                     <a href="{{ route('admin.bookings.index') }}" class="nav-item {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
                         <i class="bi bi-calendar-check"></i>
-                        <span>Bookings</span>
+                        <span>Lịch hẹn</span>
                         @php $bookingCount = \App\Models\Booking::whereIn('status', ['pending', 'confirmed'])->count(); @endphp
                         @if($bookingCount > 0)
                         <span class="nav-badge nav-badge-warning">{{ $bookingCount }}</span>
@@ -57,39 +57,39 @@
                     </a>
                     <a href="{{ route('admin.promotions.index') }}" class="nav-item {{ request()->routeIs('admin.promotions.*') ? 'active' : '' }}">
                         <i class="bi bi-tag"></i>
-                        <span>Promotions</span>
+                        <span>Khuyến mãi</span>
                     </a>
                 </div>
                 
                 <div class="nav-section">
-                    <span class="nav-section-title">Access Control</span>
+                    <span class="nav-section-title">Kiểm soát truy cập</span>
                     <a href="{{ route('admin.roles.index') }}" class="nav-item {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                         <i class="bi bi-shield-check"></i>
-                        <span>Roles</span>
+                        <span>Vai trò</span>
                     </a>
                     <a href="{{ route('admin.permissions.index') }}" class="nav-item {{ request()->routeIs('admin.permissions.*') ? 'active' : '' }}">
                         <i class="bi bi-key"></i>
-                        <span>Permissions</span>
+                        <span>Quyền hạn</span>
                     </a>
                     <a href="{{ route('admin.users.permissions.index') }}" class="nav-item {{ request()->routeIs('admin.users.permissions.*') ? 'active' : '' }}">
                         <i class="bi bi-person-check"></i>
-                        <span>User Permissions</span>
+                        <span>Phân quyền User</span>
                     </a>
                     <a href="{{ route('admin.teams.index') }}" class="nav-item {{ request()->routeIs('admin.teams.*') ? 'active' : '' }}">
                         <i class="bi bi-diagram-3"></i>
-                        <span>Teams</span>
+                        <span>Đội ngũ</span>
                     </a>
                     <a href="{{ route('admin.access-matrix.index') }}" class="nav-item {{ request()->routeIs('admin.access-matrix.*') ? 'active' : '' }}">
                         <i class="bi bi-grid-3x3"></i>
-                        <span>Access Matrix</span>
+                        <span>Ma trận quyền</span>
                     </a>
                 </div>
                 
                 <div class="nav-section">
-                    <span class="nav-section-title">Analytics</span>
+                    <span class="nav-section-title">Thống kê</span>
                     <a href="{{ route('admin.reports.index') }}" class="nav-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                         <i class="bi bi-graph-up"></i>
-                        <span>Reports</span>
+                        <span>Báo cáo</span>
                     </a>
                 </div>
             </nav>
@@ -97,7 +97,7 @@
             <div class="sidebar-footer">
                 <a href="{{ route('home') }}" class="nav-item">
                     <i class="bi bi-house"></i>
-                    <span>Back to Site</span>
+                    <span>Về trang chủ</span>
                 </a>
                 <div class="admin-user">
                     <div class="admin-avatar">
@@ -105,11 +105,11 @@
                     </div>
                     <div class="admin-info">
                         <span class="admin-name">{{ auth()->user()->fullname ?? auth()->user()->username }}</span>
-                        <span class="admin-role">{{ auth()->user()->role?->name ?? 'Admin' }}</span>
+                        <span class="admin-role">{{ auth()->user()->role?->name ?? 'Quản trị' }}</span>
                     </div>
                     <form action="{{ route('logout') }}" method="POST" class="logout-form">
                         @csrf
-                        <button type="submit" class="btn-logout" title="Logout">
+                        <button type="submit" class="btn-logout" title="Đăng xuất">
                             <i class="bi bi-box-arrow-right"></i>
                         </button>
                     </form>
@@ -126,9 +126,9 @@
                         <i class="bi bi-list"></i>
                     </button>
                     <div class="header-title">
-                        <h1 class="page-title">{{ $title ?? 'Dashboard' }}</h1>
+                        <h1 class="page-title">{{ $title ?? 'Bảng điều khiển' }}</h1>
                         <nav class="breadcrumb-nav">
-                            <a href="{{ route('admin.dashboard') }}">Admin</a>
+                            <a href="{{ route('admin.dashboard') }}">Quản trị</a>
                             @stack('breadcrumbs')
                         </nav>
                     </div>

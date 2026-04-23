@@ -45,9 +45,16 @@ class AppDemoSeeder extends Seeder
         ];
 
         foreach ($allPermissions as $perm) {
-            Permission::firstOrCreate(['name' => $perm['name']], [
+            // Tách resource và action từ name (vd: booking.view_assigned -> resource: booking, action: view_assigned)
+            $parts = explode('.', $perm['name']);
+            $resource = $parts[0] ?? $perm['module'];
+            $action = $parts[1] ?? 'view';
+
+            Permission::updateOrCreate(['name' => $perm['name']], [
                 'slug' => $perm['name'],
                 'module' => $perm['module'],
+                'resource_type' => $resource,
+                'action' => $action,
                 'description' => $perm['description'],
                 'is_active' => true,
             ]);

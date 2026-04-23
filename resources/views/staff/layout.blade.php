@@ -453,6 +453,7 @@
                 
                 <div class="nav-section">
                     <span class="nav-section-title">Management</span>
+                    @if(auth()->user()->hasPermission('booking.view_assigned'))
                     <a href="{{ route('staff.bookings.index') }}" class="nav-item {{ request()->routeIs('staff.bookings.*') ? 'active' : '' }}">
                         <i class="bi bi-calendar-check"></i>
                         <span>Bookings</span>
@@ -461,6 +462,58 @@
                         <span class="nav-badge nav-badge-warning">{{ $pendingCount }}</span>
                         @endif
                     </a>
+                    @endif
+
+                    @if(auth()->user()->hasPermission('staff.view_team'))
+                    <a href="{{ route('staff.team') }}" class="nav-item {{ request()->routeIs('staff.team') ? 'active' : '' }}">
+                        <i class="bi bi-people"></i>
+                        <span>Team Members</span>
+                    </a>
+                    @endif
+
+                    @if(auth()->user()->hasPermission('pickup.view'))
+                    <a href="{{ route('staff.pickups.index') }}" class="nav-item {{ request()->routeIs('staff.pickups.*') ? 'active' : '' }}">
+                        <i class="bi bi-truck"></i>
+                        <span>Pickups</span>
+                    </a>
+                    @endif
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Marketing</span>
+                    @if(auth()->user()->hasPermission('promotion.view'))
+                    <a href="{{ route('admin.promotions.index') }}" class="nav-item {{ request()->routeIs('admin.promotions.*') ? 'active' : '' }}">
+                        <i class="bi bi-tag"></i>
+                        <span>Promotions</span>
+                    </a>
+                    @endif
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Analytics</span>
+                    @if(auth()->user()->hasPermission('report.view'))
+                    <a href="{{ route('admin.reports.index') }}" class="nav-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
+                        <i class="bi bi-graph-up"></i>
+                        <span>Reports</span>
+                    </a>
+                    @endif
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">General</span>
+                    @if(auth()->user()->hasPermission('user.view'))
+                    <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                        <i class="bi bi-people"></i>
+                        <span>Users</span>
+                    </a>
+                    @endif
+
+                    @if(auth()->user()->hasPermission('service.view'))
+                    <a href="{{ route('admin.services.index') }}" class="nav-item {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
+                        <i class="bi bi-gem"></i>
+                        <span>Services</span>
+                    </a>
+                    @endif
                 </div>
             </nav>
             

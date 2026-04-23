@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // RQ08: Gửi nhắc lịch hẹn mỗi giờ
+        $schedule->command('bookings:send-reminders')->hourly();
     }
 
     /**
